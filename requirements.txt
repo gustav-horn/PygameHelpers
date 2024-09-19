@@ -1,0 +1,8 @@
+pyaudio
+pyttsx4
+SpeechRecognition[whisper-local]
+rapidfuzz
+spacy
+numpy==1.26.4
+pygame
+mypy
