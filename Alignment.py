@@ -11,7 +11,7 @@ class Position(Enum):
     top = "top"
     centre = "centre"
     bottom = "bottom"
-    bottom_left = "bottom left"
+    bottom_right = "bottom right"
 
 @dataclass
 class Coords:
@@ -56,8 +56,8 @@ class Alignment:
                 y = 0
             case Position.centre:
                 x, y = self.centre_position(object, screen)
-            case Position.bottom_left:
-                x = 0
+            case Position.bottom_right:
+                x = self.left_x(object, screen)
                 y = self.bottom_y(object, screen)
             case Position.bottom:
                 x = self.centre_position(object, screen)[0]
@@ -82,6 +82,10 @@ class Alignment:
     def bottom_y(self, object: pygame.Surface, screen: pygame.Surface) -> float:
         y = screen.get_height() - 2*object.get_height()
         return y
+    
+    def left_x(self, object, screen) -> float:
+        x = screen.get_width() - object.get_width()
+        return x
     
     def get_offsets(self):
         return self.offsets
