@@ -6,6 +6,6 @@ setup(
    description='Collection of classes to help with pygame',
    author='Gustav Horn',
    author_email='mbkcheah@gmail.com',
-   packages=[''],  #same as name
+   packages=['PygameHelpers'],  #same as name
    install_requires=['pygame'], #external packages as dependencies
 )
