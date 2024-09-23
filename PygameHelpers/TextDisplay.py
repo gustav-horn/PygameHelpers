@@ -56,15 +56,17 @@ class TextDisplay:
 
             def talk(self) -> None:
                 line_no = 0
-                diff = int(self.screen.get_width() * 0.8/self.font.size('a')[0])
+                diff = int(self.screen.get_width() * 0.8/self.font.size('a')[0]) #number of characters that can fit on 80% of the screen's width
                 height = self.font.get_height()
+                interim: pygame.Surface = pygame.Surface((0,0))
                 for item in self.message:
                     strings = [item[start:start+diff] for start in range(0, len(item), diff)]
                     for segment in strings:
                         line = self.font.render(segment, True, self.colour)
-                        start_position = self.alignment.get_coords(line, self.screen)
-                        self.screen.blit(line,(start_position[0], start_position[1] + height*line_no))
+                        interim.blit(line,(0, 0 + height*line_no))
                         line_no+=1
+                start_position = self.alignment.get_coords(interim, self.screen)
+                self.screen.blit(interim, start_position)
         return Talker(message, alignment, self.screen, font, colour).talk
                 
 
