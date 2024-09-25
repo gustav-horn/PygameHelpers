@@ -64,7 +64,6 @@ class TextDisplay:
                     strings = [item[start:start+diff] for start in range(0, len(item), diff)]
                     for segment in strings:
                         line = self.font.render(segment, True, self.colour)
-                        interim = pygame.Surface((max(interim.get_width(), line.get_width()), interim.get_height() + line.get_height())) # re-initialise interim 
                         interim.blit(line,(0, height*line_no))
                         line_no+=1
                 start_position = self.alignment.get_coords(interim, self.screen)
