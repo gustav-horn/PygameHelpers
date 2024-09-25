@@ -43,7 +43,7 @@ class TextDisplay:
 
 
     def displayMultipleLines(self, message: list[str], alignment: Alignment, new_font: Optional[pygame.font.Font] = None, new_colour: Optional[tuple] = None) -> Callable[[], None]:
-        '''Returns function that displays multiple lines of text cascaddown a window. Use if displayLine() is going off the screen'''
+        '''Returns function that displays multiple lines of text cascading down a window. Use if displayLine() is going off the screen'''
         font: pygame.font.Font = optionalUnpack(new_font, self.font)
         colour: tuple = optionalUnpack(new_colour, self.colour)
         @dataclass
@@ -90,7 +90,7 @@ class TextDisplay:
     
 
     def image_display(self, image: pygame.Surface, alignment: Alignment, scale: tuple) -> Callable[[], None]:
-        '''Returns callable that displays image at specified position oecified size'''
+        '''Returns callable that displays image at specified position with the specified size'''
         @dataclass
         class Painter:
             image: pygame.Surface
