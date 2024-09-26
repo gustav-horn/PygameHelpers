@@ -84,7 +84,7 @@ class Alignment:
         return (x, y)
     
     def bottom_y(self, object: pygame.Surface, screen: pygame.Surface) -> float:
-        y = screen.get_height() - object.get_height()
+        y = screen.get_height() - (object.get_height() * 1.1)
         return y
     
     def right_x(self, object, screen) -> float:
