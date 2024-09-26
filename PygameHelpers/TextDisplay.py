@@ -59,7 +59,7 @@ class TextDisplay:
                 line_no = 0
                 diff = int(self.screen.get_width() * 0.8/self.font.size('a')[0]) #number of characters that can fit on 80% of the screen's width
                 height = self.font.get_height()
-                interim: pygame.Surface = pygame.Surface((self.screen.get_width() * 0.8, reduce(lambda curr, new: curr + len(range(0, len(new), diff)), self.message, 0)*height))
+                interim: pygame.Surface = pygame.Surface((min(diff, sum([len(i) for i in self.message], 0))*self.font.size('a')[0]*0.8, reduce(lambda curr, new: curr + len(range(0, len(new), diff)), self.message, 0)*height))
                 start_position = self.alignment.get_coords(interim, self.screen)
                 for item in self.message:
                     strings = [item[start:start+diff] for start in range(0, len(item), diff)]
