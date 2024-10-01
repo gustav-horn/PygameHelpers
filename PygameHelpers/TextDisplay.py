@@ -99,6 +99,7 @@ class TextDisplay:
             scale: tuple
           
             def paint(self):
+                self.image = pygame.transform.scale(image, scale)
                 start_position = self.alignment.get_coords(self.image, self.screen)
-                self.screen.blit(pygame.transform.scale(image, scale), start_position)
+                self.screen.blit(self.image, start_position)
         return Painter(image, alignment, self.screen, scale).paint
