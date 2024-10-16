@@ -3,4 +3,4 @@
 __pycache__
 PygameHelpers/__pycache__
 
-.manual_tests
+manual_tests.py
