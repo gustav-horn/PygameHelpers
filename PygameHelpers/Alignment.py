@@ -7,16 +7,16 @@ import pygame
 
 class Position(Enum):
     '''Sequence of values for positional locations'''
-    none = "none"
-    top_left = "top left"
-    top = "top"
-    top_right = "top right"
-    left = "left"
-    centre = "centre"
-    right = "right"
-    bottom_left = "bottom left"
-    bottom = "bottom"
-    bottom_right = "bottom right"
+    none = 0
+    top_left = 1
+    top = 2
+    top_right = 3
+    left = 4
+    centre = 5
+    right = 6
+    bottom_left = 7
+    bottom = 8
+    bottom_right = 9
 
 @dataclass
 class Coords:
