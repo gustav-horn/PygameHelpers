@@ -8,10 +8,14 @@ import pygame
 class Position(Enum):
     '''Sequence of values for positional locations'''
     none = "none"
+    top_left = "top left"
     top = "top"
+    top_right = "top right"
+    left = "left"
     centre = "centre"
-    bottom = "bottom"
+    right = "right"
     bottom_left = "bottom left"
+    bottom = "bottom"
     bottom_right = "bottom right"
 
 @dataclass
