@@ -71,8 +71,8 @@ class TextDisplay:
     def image_display(self, image: pygame.Surface, alignment: Alignment, scale: tuple) -> Callable[[], None]:
         '''Returns callable that displays image at specified position with the specified size'''
 
-        def paint():
+        def paint(image):
             image = pygame.transform.scale(image, scale)
             start_position = alignment.get_coords(image, self.screen)
             self.screen.blit(image, start_position)
-        return paint
+        return lambda : paint(image)
