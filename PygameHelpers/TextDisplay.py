@@ -1,12 +1,18 @@
 
 
 from dataclasses import dataclass
-from typing import Callable, Optional, TypeVar
+from typing import Callable, Optional, Tuple, TypeVar
 from functools import reduce
 from .Alignment import Alignment
 import pygame
 
 type coordsOrAlignment = tuple[float, float] | Callable[[pygame.Surface, pygame.Surface], tuple[float, float]]
+
+@dataclass
+class DiscussionBaseClass():
+    screen: pygame.Surface
+    display: str
+    response: str
 
 T = TypeVar("T")
 def optionalUnpack(value: Optional[T], default: T) -> T:
@@ -57,15 +63,33 @@ class TextDisplay:
         return talk
                 
 
-    def request_prompt(self, message: str, alignment: Alignment, new_font: Optional[pygame.font.Font] = None, new_colour: Optional[tuple] = None) -> Callable[[str], None]:
+    def request_prompt(self, message: str, alignment: Alignment, new_font: Optional[pygame.font.Font] = None, new_colour: Optional[tuple] = None) -> tuple[DiscussionBaseClass, Callable[[pygame.event.Event], bool]]:
         '''Returns callable that displays one line with option to add more chrs onto end'''
         font: pygame.font.Font = optionalUnpack(new_font, self.font)
         colour: tuple = optionalUnpack(new_colour, self.colour)
-        def talk(add: str) -> None:
-            line = font.render(message + add, True, colour)
-            start_position = alignment.get_coords(line, self.screen)
-            self.screen.blit(line, start_position)
-        return talk
+
+        @dataclass
+        class Talk(DiscussionBaseClass):
+            screen: pygame.Surface
+            display: str
+            response: str
+
+            def talk(self, event: pygame.event.Event) -> bool:
+                if event.type != pygame.KEYDOWN: return True
+                if event.key == pygame.K_RETURN: #if we hit enter
+                    return False
+                elif event.key == pygame.K_BACKSPACE: #if we y'know, hit backspace
+                    if len(self.response) <= 1: self.response = ''
+                    else: self.response = self.response[:-1]
+                else: #just add the value of the key pressed to the ans string
+                    self.response += event.unicode
+
+                line = font.render(self.display + self.response, True, colour)
+                start_position = alignment.get_coords(line, self.screen)
+                self.screen.blit(line, start_position)# Handles text input
+                return True
+        talker = Talk(self.screen, message, "")
+        return talker, talker.talk
     
 
     def image_display(self, image: pygame.Surface, alignment: Alignment, scale: tuple) -> Callable[[], None]:

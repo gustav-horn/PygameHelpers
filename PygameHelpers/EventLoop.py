@@ -17,7 +17,7 @@ class EventLoop:
         self.background_colour = background_colour
         self.backgrounds = [lambda : self.screen.fill(self.background_colour)]
         self.static_displays: list[Callable[[], None]] = []
-        self.key_responses: dict[str, Callable[[str], None]] = {}
+        self.key_responses: dict[pygame.event.Event, Callable[[str], bool]] = {}
         self.FPS = pygame.time.Clock()
 
     def update(self, static_displays: list[Callable[[], None]] = [lambda : None], update: bool = True):
@@ -42,19 +42,12 @@ class EventLoop:
                 if event.type == pygame.QUIT:
                     pygame.quit() 
                     sys.exit() #kills program
-                if event.type == pygame.KEYDOWN: #i.e. if we get input
+                 #i.e. if we get input
 
-                    action = self.key_responses.get(event.key)
-                    if action is not None: action(event.key)
-
-                    # Handles text input
-                    elif event.key == pygame.K_RETURN: #if we hit enter
-                        return ans
-                    elif event.key == pygame.K_BACKSPACE: #if we y'know, hit backspace
-                        if len(ans) == 1: ans = ''
-                        else: ans = ans[:-1]
-                    else: #just add the value of the key pressed to the ans string
-                        ans += event.unicode
+                action = self.key_responses.get(event)
+                if action is not None: 
+                    if action(event.key) == False:
+                        return
 
             pygame.display.flip()
             self.FPS.tick(60)
