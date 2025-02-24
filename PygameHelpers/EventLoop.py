@@ -17,7 +17,7 @@ class EventLoop:
         self.background_colour = background_colour
         self.backgrounds = [lambda : self.screen.fill(self.background_colour)]
         self.static_displays: list[Callable[[], None]] = []
-        self.key_responses: list[Callable[[str], bool]] = []
+        self.key_responses: list[Callable[[pygame.event.Event], bool]] = []
         self.FPS = pygame.time.Clock()
 
     def update(self, update: bool = True):
@@ -47,7 +47,7 @@ class EventLoop:
                     sys.exit() #kills program
 
                 for action in self.key_responses:
-                    if action(event.key) == False:
+                    if action(event) == False:
                         return
 
             pygame.display.flip()
@@ -64,3 +64,9 @@ class EventLoop:
     def remove_static_display(self, display: Callable[[], None]):
         if display in self.static_displays:
             self.static_displays.remove(display)
+
+    def add_key_response(self, response: Callable[[pygame.event.Event], bool]):
+        self.key_responses.append(response)
+    def remove_key_response(self, response: Callable[[pygame.event.Event], bool]):
+        if response in self.key_responses:
+            self.key_responses.remove(response)
