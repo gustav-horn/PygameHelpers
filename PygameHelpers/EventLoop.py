@@ -17,7 +17,7 @@ class EventLoop:
         self.background_colour = background_colour
         self.backgrounds = [lambda : self.screen.fill(self.background_colour)]
         self.static_displays: list[Callable[[], None]] = []
-        self.key_responses: dict[pygame.event.Event, Callable[[str], bool]] = {}
+        self.key_responses: list[Callable[[str], bool]] = []
         self.FPS = pygame.time.Clock()
 
     def update(self, update: bool = True):
@@ -35,7 +35,7 @@ class EventLoop:
         Uses:
          - backgrounds: Parameter that provides a list of backgrounds that will be activated.
          - static_displays: Parameter that provides a list of callables that will be called in mainloop. Used for adding Callables that display objects that will NOT respond to user input
-         - key_responses: Parameter that specifies a dictionary of pygame events and callables that will be executed when the corresponding event occurs. All callables must return a boolean which determines if the run() function will continue or end, passing control back to the programmer.
+         - key_responses: Parameter that specifies a list of callables that will be executed when a pygame event occurs. All callables must return a boolean which determines if the run() function will continue or end, passing control back to the programmer. It is the RESPONSIBILITY of each callable to filter the events.
         '''
         ans: str = ''
 
@@ -45,10 +45,8 @@ class EventLoop:
                 if event.type == pygame.QUIT:
                     pygame.quit() 
                     sys.exit() #kills program
-                 #i.e. if we get input
 
-                action = self.key_responses.get(event)
-                if action is not None: 
+                for action in self.key_responses:
                     if action(event.key) == False:
                         return
 
