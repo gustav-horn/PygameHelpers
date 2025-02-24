@@ -75,6 +75,11 @@ class TextDisplay:
             response: str
 
             def talk(self, event: pygame.event.Event) -> bool:
+                line = font.render(self.display + self.response, True, colour)
+                start_position = alignment.get_coords(line, self.screen)
+                self.screen.blit(line, start_position)# Handles text input
+
+                
                 if event.type != pygame.KEYDOWN: return True
                 if event.key == pygame.K_RETURN: #if we hit enter
                     return False
@@ -84,9 +89,6 @@ class TextDisplay:
                 else: #just add the value of the key pressed to the ans string
                     self.response += event.unicode
 
-                line = font.render(self.display + self.response, True, colour)
-                start_position = alignment.get_coords(line, self.screen)
-                self.screen.blit(line, start_position)# Handles text input
                 return True
         talker = Talk(self.screen, message, "")
         return talker, talker.talk
