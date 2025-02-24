@@ -20,24 +20,27 @@ class EventLoop:
         self.key_responses: dict[pygame.event.Event, Callable[[str], bool]] = {}
         self.FPS = pygame.time.Clock()
 
-    def update(self, static_displays: list[Callable[[], None]] = [lambda : None], update: bool = True):
+    def update(self, update: bool = True):
         '''Gameloop function. Used for statically updating the game display. 
-        Same parameters as run()'''
+        Same dependencies as run(). 
+        Parameters:
+            - update: bool that determines whether the function should update the screen itself. Leave False if you don't need the screen to change immediately to prevent flicker
+        '''
         [background() for background in self.backgrounds]
-        [display() for display in static_displays] 
+        [display() for display in self.static_displays] 
         if update: pygame.display.flip()
 
     def run(self):
         '''Gamemainloop. Exits upon the submission of an input string to the game window, in which case it returns the string, or upon the closing of the game which results in an error and the termination of the program.
-        Parameters:
-         - static_displays: Optional parameter that provides a list of callables that will be called in mainloop. Used for adding Callables that display objects that will NOT respond to user input
-         - editable_text_displays: Optional parameter that provides a list of callables that will be called in mainloop with the text the user has placed in (before submitting it) as input. Used to add Callables to add objects that will respond to user input, i.e. text input fields
-         - key_responses: Optional parameter that specifies a dictionary of pygame constants and callables that will be executed when the corresponding key is pressed 
+        Uses:
+         - backgrounds: Parameter that provides a list of backgrounds that will be activated.
+         - static_displays: Parameter that provides a list of callables that will be called in mainloop. Used for adding Callables that display objects that will NOT respond to user input
+         - key_responses: Parameter that specifies a dictionary of pygame events and callables that will be executed when the corresponding event occurs. All callables must return a boolean which determines if the run() function will continue or end, passing control back to the programmer.
         '''
         ans: str = ''
 
         while True:
-            self.update(static_displays=self.static_displays, update=False)
+            self.update(update=False)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit() 
