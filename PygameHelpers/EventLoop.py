@@ -41,7 +41,7 @@ class EventLoop:
 
         while True:
             self.update(update=False)
-            for event in pygame.event.get():
+            for event in pygame.event.get() + [pygame.event.Event(0)]:
                 if event.type == pygame.QUIT:
                     pygame.quit() 
                     sys.exit() #kills program
