@@ -16,7 +16,6 @@ class EventLoop:
 
         self.background_colour = background_colour
         self.backgrounds = [lambda : self.screen.fill(self.background_colour)]
-        self.static_displays: list[Callable[[], None]] = []
         self.key_responses: list[Callable[[pygame.event.Event], bool]] = []
         self.FPS = pygame.time.Clock()
 
@@ -26,9 +25,10 @@ class EventLoop:
         Parameters:
             - update: bool that determines whether the function should update the screen itself. Leave False if you don't need the screen to change immediately to prevent flicker
         '''
-        [background() for background in self.backgrounds]
-        [display() for display in self.static_displays] 
-        if update: pygame.display.flip()
+        [background() for background in self.backgrounds] 
+        if update: 
+            pygame.display.flip()
+            [display(pygame.event.Event(0)) for display in self.key_responses]
 
     def run(self):
         '''Gamemainloop. Exits upon the submission of an input string to the game window, in which case it returns the string, or upon the closing of the game which results in an error and the termination of the program.
@@ -58,12 +58,6 @@ class EventLoop:
     def remove_background(self, background: Callable[[], Any]):
         if background in self.backgrounds:
             self.backgrounds.remove(background)
-
-    def add_static_display(self, display: Callable[[], None]):
-        self.static_displays.append(display)
-    def remove_static_display(self, display: Callable[[], None]):
-        if display in self.static_displays:
-            self.static_displays.remove(display)
 
     def add_key_response(self, response: Callable[[pygame.event.Event], bool]):
         self.key_responses.append(response)

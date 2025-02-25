@@ -14,6 +14,9 @@ class DiscussionBaseClass():
     display: str
     response: str
 
+    def get_response(self):
+        return self.response
+
 T = TypeVar("T")
 def optionalUnpack(value: Optional[T], default: T) -> T:
     if value is None:
@@ -30,22 +33,23 @@ class TextDisplay:
         self.colour = colour
 
 
-    def displayLine(self, message: str, alignment: Alignment, new_font: Optional[pygame.font.Font] = None, new_colour: Optional[tuple] = None) -> Callable[[], None]:
+    def displayLine(self, message: str, alignment: Alignment, new_font: Optional[pygame.font.Font] = None, new_colour: Optional[tuple] = None) -> Callable[[pygame.event.Event], bool]:
         '''Returns callable that displays single line of text on screen'''
         font: pygame.font.Font = optionalUnpack(new_font, self.font)
         colour: tuple = optionalUnpack(new_colour, self.colour)
-        def talk() -> None:
+        def talk(event: pygame.event.Event) -> bool:
             line = font.render(message, True, colour)
             start_position = alignment.get_coords(line, self.screen)
             self.screen.blit(line,start_position)
+            return True
         return talk
 
 
-    def displayMultipleLines(self, message: list[str], alignment: Alignment, new_font: Optional[pygame.font.Font] = None, new_colour: Optional[tuple] = None) -> Callable[[], None]:
+    def displayMultipleLines(self, message: list[str], alignment: Alignment, new_font: Optional[pygame.font.Font] = None, new_colour: Optional[tuple] = None) -> Callable[[pygame.event.Event], bool]:
         '''Returns function that displays multiple lines of text cascading down a window. Use if displayLine() is going off the screen'''
         font: pygame.font.Font = optionalUnpack(new_font, self.font)
         colour: tuple = optionalUnpack(new_colour, self.colour)
-        def talk() -> None:
+        def talk(event: pygame.event.Event) -> bool:
             line_no = 0
             diff = int(self.screen.get_width() * 0.8/font.size('a')[0]) #number of characters that can fit on 80% of the screen's width
             height = font.get_height()
@@ -60,6 +64,7 @@ class TextDisplay:
                     line = font.render(segment, True, colour)
                     self.screen.blit(line,(start_position[0], start_position[1] + height*line_no))
                     line_no+=1
+            return True
         return talk
                 
 
@@ -94,11 +99,12 @@ class TextDisplay:
         return talker, talker.talk
     
 
-    def image_display(self, image: pygame.Surface, alignment: Alignment, scale: tuple) -> Callable[[], None]:
+    def image_display(self, image: pygame.Surface, alignment: Alignment, scale: tuple) -> Callable[[pygame.event.Event], bool]:
         '''Returns callable that displays image at specified position with the specified size'''
 
         def paint(image):
             image = pygame.transform.scale(image, scale)
             start_position = alignment.get_coords(image, self.screen)
             self.screen.blit(image, start_position)
-        return lambda : paint(image)
+            return True
+        return lambda x: paint(image)
